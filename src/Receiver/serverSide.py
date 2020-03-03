@@ -5,7 +5,7 @@ import sys
 from socket import AF_INET, SOCK_DGRAM
 #initializing host, port
 serverAddress = "localhost"
-serverPort = 10015
+serverPort = 10032
 #starting the server
 s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 s.settimeout(15);
@@ -16,6 +16,7 @@ print('I am ready for any client side request \n')
 totalFilesCount = 100
 i=0;
 fileName = 'receive.txt';
+adk = 1
 while True:
     #s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     #recording the start time
@@ -27,29 +28,39 @@ while True:
     
     print('I am starting receiving file ', fileName, 'for the ',i,'th time')
     #opening the file to write
-    data, server = s.recvfrom(1024)
+    #data, server = s.recvfrom(1024)
     f = open(file, 'wb')
     data, server = s.recvfrom(1024)
     #data = data
-    print(data)
-    try:
-        while (data):
-            f.write(data)
-            s.settimeout(2)
-            data, server = s.recvfrom(1024)
-            print("Hello")
+    #print(data)
+    while data:
+        f.write(data)
+        s.settimeout(15)
+        #try:
+            #sent = s.sendto(adk, server_address)
+        #except:
+            #print("did not send adk") 
+            #print(len(adk))   
+        data, server = s.recvfrom(1024)
+        print(data)
+        if data.decode('utf8') == '-1':
+            f.close
+            break
         
-        f.close()
+        #f.close()
+    #f.close()
+    print('I am finishing receiving file ', fileName, 'for the ',i,'th time ')
+    #recording the end time
+    endTime = datetime.now()
+    timeTaken = int((endTime - startTime).total_seconds() * 1000)
+    totalTime += timeTaken
+    print('The time used in millisecond to receive ', fileName ,' for ', i,'th time is: ',timeTaken,'\n')
+    if i == totalFilesCount: break;
+    try:
+        sent = s.sendto(adk, server_address)
     except:
-        f.close()
-        print('I am finishing receiving file ', fileName, 'for the ',i,'th time ')
-        #recording the end time
-        endTime = datetime.now()
-        timeTaken = int((endTime - startTime).total_seconds() * 1000)
-        totalTime += timeTaken
-        print('The time used in millisecond to receive ', fileName ,' for ', i,'th time is: ',timeTaken,'\n')
-        if i == totalFilesCount: break;
-        #s.close()
+        print("did not send adk") 
+    #s.close()
 s.close()
 print('The average time to receive file ',fileName,' in millisecond is: ',totalTime/totalFilesCount)
 print('Total time to receive file ',fileName,' for ',totalFilesCount,' times in millisecond is: ',totalTime)
@@ -62,6 +73,7 @@ for x in range(totalFilesCount):
 print(f , ' Times out of ' , totalFilesCount , ' are not correct!')
 print('I am done')
 
-
-
     
+
+
+
