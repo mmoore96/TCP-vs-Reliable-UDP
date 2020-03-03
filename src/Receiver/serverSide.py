@@ -1,6 +1,7 @@
 import socket
 import filecmp
 from datetime import datetime
+import time
 import sys
 from socket import AF_INET, SOCK_DGRAM
 import hashlib
@@ -14,10 +15,11 @@ server_address = (serverAddress, serverPort)
 s.bind(server_address)
 totalTime = 0
 print('I am ready for any client side request \n')
-totalFilesCount = 10
+totalFilesCount = 100
 i=0;
 fileName = 'receive.txt';
 adk = 'ok'.encode('utf8')
+timeToStart = 0
 while True:
     #s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     #recording the start time
@@ -30,6 +32,12 @@ while True:
     #opening the file to write
     #data, server = s.recvfrom(1024)
     f = open(file, 'wb')
+    startTime = datetime.now()
+    start_time = time.time()
+    while timeToStart == 0:
+            sTime = datetime.now()
+            s_time = time.time()
+            timeToStart = 1
     data, server = s.recvfrom(1024)
     print('I am starting receiving file ', fileName, 'for the ',i,'th time')
     #data = data
@@ -66,9 +74,10 @@ while True:
     except:
         print("did not send adk") 
     #s.close()
-
+elapsed = str(time.time() - s_time)
 print('The average time to receive file ',fileName,' in millisecond is: ',totalTime/totalFilesCount)
 print('Total time to receive file ',fileName,' for ',totalFilesCount,' times in millisecond is: ',totalTime)
+print("\nElapsed: " + elapsed)
 f=0
 #checking whether the correct data is recieved or not
 hashFun, server = s.recvfrom(1024)
