@@ -4,6 +4,7 @@ import time
 import threading
 import filecmp
 import os
+import hashlib
 #initializing host, port, filename, total time and number of times to send the file
 serverAddress = "localhost"
 serverPort = 10031
@@ -96,3 +97,16 @@ print('The average time to receive file ',fileName,' in millisecond is: ',totalT
 print('Total time to receive file ',fileName,' for ',numTimesSend,' times in millisecond is: ',totalTime)
 print("\nElapsed: " + str(time.time() - start_time))
 print('I am done')
+sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+server_address = (serverAddress, serverPort)
+BLOCKSIZE = 65536
+hasher = hashlib.sha1()
+with open(fileName, 'rb') as afile:
+    buf = afile.read(BLOCKSIZE)
+    while len(buf) > 0:
+        hasher.update(buf)
+        buf = afile.read(BLOCKSIZE)
+#print(hasher.hexdigest())
+sock.settimeout(5)
+sent = sock.sendto(hasher.hexdigest().encode('utf8'), server)
+sock.close
