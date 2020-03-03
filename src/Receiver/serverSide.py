@@ -3,6 +3,7 @@ import filecmp
 from datetime import datetime
 import sys
 from socket import AF_INET, SOCK_DGRAM
+import hashlib
 #initializing host, port
 serverAddress = "localhost"
 serverPort = 10031
@@ -65,14 +66,27 @@ while True:
     except:
         print("did not send adk") 
     #s.close()
-s.close()
+
 print('The average time to receive file ',fileName,' in millisecond is: ',totalTime/totalFilesCount)
 print('Total time to receive file ',fileName,' for ',totalFilesCount,' times in millisecond is: ',totalTime)
 f=0
 #checking whether the correct data is recieved or not
+hashFun, server = s.recvfrom(1024)
+
+s.close()
 for x in range(totalFilesCount):
+    BLOCKSIZE = 65536
+    hasher = hashlib.sha1()
     x += 1
-    res = filecmp.cmp('receive.txt','receive'+str(x)+'.txt',shallow=False)
-    if res == False: f += 1
+    with open('receive'+str(x)+'.txt', 'rb') as afile:
+        buf = afile.read(BLOCKSIZE)
+        while len(buf) > 0:
+            hasher.update(buf)
+            buf = afile.read(BLOCKSIZE)
+    #print(hasher.hexdigest())
+    #res = filecmp.cmp('receive.txt','receive'+str(x)+'.txt',shallow=False)
+    if hashFun.decode('utf8') != hasher.hexdigest():
+        f += 1
+    #if res == False: f += 1
 print(f , ' Times out of ' , totalFilesCount , ' are not correct!')
 print('I am done')
