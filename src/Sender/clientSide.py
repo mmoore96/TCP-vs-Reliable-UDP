@@ -12,11 +12,11 @@ serverPort = 10031
 #server_address = (serverAddress, serverPort)
 fileName = "send.txt"
 totalTime = 0
-numTimesSend = 10
+numTimesSend = 100
 print('I am connecting to server side: ', serverAddress,'\n')
 eof = "-1".encode('utf8')
 #using a for loop to send the file 100 times 
-
+timeToStart = 0
 for x in range(numTimesSend):
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     server_address = (serverAddress, serverPort)
@@ -26,6 +26,10 @@ for x in range(numTimesSend):
     #recording the start time
     startTime = datetime.now()
     start_time = time.time()
+    while timeToStart == 0:
+            sTime = datetime.now()
+            s_time = time.time()
+            timeToStart = 1
     #print("Request started at: " + str(datetime.datetime.utcnow()))
     #connecting to the server
     #sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -93,9 +97,10 @@ for x in range(numTimesSend):
         #except:
         sock.close()
 #sock.close()
-print('The average time to receive file ',fileName,' in millisecond is: ',totalTime/numTimesSend)
-print('Total time to receive file ',fileName,' for ',numTimesSend,' times in millisecond is: ',totalTime)
-print("\nElapsed: " + str(time.time() - start_time))
+elapsed = str(time.time() - s_time)
+print('The average time to send file ',fileName,' in millisecond is: ',totalTime/numTimesSend)
+print('Total time to send file ',fileName,' for ',numTimesSend,' times in millisecond is: ',totalTime)
+print("\nElapsed: " + elapsed)
 print('I am done')
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 server_address = (serverAddress, serverPort)
