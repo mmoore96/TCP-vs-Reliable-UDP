@@ -6,17 +6,18 @@ import filecmp
 import os
 import hashlib
 #initializing host, port, filename, total time and number of times to send the file
-serverAddress = "localhost"
-serverPort = 10031
+serverAddress = "168.26.197.122"
+serverPort = 10032
 #sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 #server_address = (serverAddress, serverPort)
 fileName = "send.txt"
 totalTime = 0
-numTimesSend = 100
+numTimesSend = 10
 print('I am connecting to server side: ', serverAddress,'\n')
 eof = "-1".encode('utf8')
 #using a for loop to send the file 100 times 
 timeToStart = 0
+bufferSize = 8192
 for x in range(numTimesSend):
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     server_address = (serverAddress, serverPort)
@@ -24,12 +25,7 @@ for x in range(numTimesSend):
     statinfo = os.stat(fileName)
     
     #recording the start time
-    startTime = datetime.now()
-    start_time = time.time()
-    while timeToStart == 0:
-            sTime = datetime.now()
-            s_time = time.time()
-            timeToStart = 1
+    
     #print("Request started at: " + str(datetime.datetime.utcnow()))
     #connecting to the server
     #sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -43,10 +39,16 @@ for x in range(numTimesSend):
     data = file_to_send.read(1024)
     #sock.sendto(data, server_address)
     test = True
-    packetsToSend = statinfo.st_size / 1024
+    packetsToSend = statinfo.st_size / bufferSize
     #print(file_to_send.tell())
     print(packetsToSend)
-    for j in range (int(packetsToSend + 1)):
+    startTime = datetime.now()
+    start_time = time.time()
+    while timeToStart == 0:
+            sTime = datetime.now()
+            s_time = time.time()
+            timeToStart = 1
+    for j in range (int(packetsToSend)):
         sent = sock.sendto(data, server_address)
         j+=1
 
@@ -57,14 +59,15 @@ for x in range(numTimesSend):
         #adk, server = sock.recvfrom(1)
         #print(adk)
         try:
-            sock.settimeout(5)
-            adk, server = sock.recvfrom(1024)
+            sock.settimeout(30)
+            adk, server = sock.recvfrom(bufferSize)
             #print(adk)
         except:
             print("did not get adk")
             break    
         if adk.decode('utf8') == 'ok':
-            data = file_to_send.read(1024)
+            #print(adk)
+            data = file_to_send.read(bufferSize)
         else:
             print("did not get adk")
         if data == b'':
@@ -80,10 +83,10 @@ for x in range(numTimesSend):
         #break            
             
     #try:
-    sock.settimeout(5)
+    sock.settimeout(10)
     sent = sock.sendto(eof, server)
     #print(eof)
-    data, server = sock.recvfrom(1024)
+    data, server = sock.recvfrom(bufferSize)
     #print(data)
     if data.decode('utf8') == 'ok':
     
@@ -111,7 +114,7 @@ with open(fileName, 'rb') as afile:
     while len(buf) > 0:
         hasher.update(buf)
         buf = afile.read(BLOCKSIZE)
-#print(hasher.hexdigest())
-sock.settimeout(5)
+print(hasher.hexdigest().encode('utf8'))
+sock.settimeout(10)
 sent = sock.sendto(hasher.hexdigest().encode('utf8'), server)
 sock.close
