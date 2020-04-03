@@ -84,7 +84,7 @@ for x in range(numTimesSend):
             
     #try:
     sock.settimeout(10)
-    sent = sock.sendto(eof, server)
+    sent = sock.sendto(eof, server_address)
     #print(eof)
     data, server = sock.recvfrom(bufferSize)
     #print(data)
