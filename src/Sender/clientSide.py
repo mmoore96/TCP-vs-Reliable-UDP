@@ -6,8 +6,8 @@ import filecmp
 import os
 import hashlib
 #initializing host, port, filename, total time and number of times to send the file
-serverAddress = "168.26.197.122"
-serverPort = 10032
+serverAddress = "24.214.242.190"
+serverPort = 10031
 #sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 #server_address = (serverAddress, serverPort)
 fileName = "send.txt"
