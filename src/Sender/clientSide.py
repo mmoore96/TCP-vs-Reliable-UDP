@@ -85,7 +85,7 @@ for x in range(numTimesSend):
     try:
         sock.settimeout(2)
         sent = sock.sendto(eof, server_address)
-    except sock.settimeout(2):
+    except sock.timeout:
         sock.settimeout(2)
         sent = sock.sendto(eof, server_address)
         print("did not send eof")
@@ -93,7 +93,7 @@ for x in range(numTimesSend):
     try:
         sock.settimeout(2)
         data, server = sock.recvfrom(bufferSize)
-    except sock.settimeout(2):
+    except sock.timeout:
         sock.settimeout(2)
         data, server = sock.recvfrom(bufferSize)
     #print(data)
