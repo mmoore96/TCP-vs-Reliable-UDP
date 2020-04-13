@@ -71,8 +71,8 @@ for x in range(numTimesSend):
             sock.settimeout(2)
             sent = sock.sendto(data, server_address)
             adk, server = sock.recvfrom(bufferSize)
-            print("did not get adk")
-            break    
+            
+                
         if adk.decode('utf8') == 'ok':
             #print(adk)
             data = file_to_send.read(bufferSize)
