@@ -95,7 +95,8 @@ for x in range(numTimesSend):
         data, server = sock.recvfrom(bufferSize)
     except socket.timeout:
         sock.settimeout(2)
-        data, server = sock.recvfrom(bufferSize)
+        sent = sock.sendto(eof, server_address)
+        data, server = sock.recvfrom(bufferSize)    
     #print(data)
     if data.decode('utf8') == 'ok':
     
