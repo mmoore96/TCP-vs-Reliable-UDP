@@ -51,7 +51,7 @@ for x in range(numTimesSend):
     for j in range (int(packetsToSend) + 1):
 
         try:
-            sock.settimeout(1)
+            sock.settimeout(0.600)
             sent = sock.sendto(data, server_address)
         except socket.timeout:
             sent = sock.sendto(data, server_address)
@@ -64,11 +64,11 @@ for x in range(numTimesSend):
         #adk, server = sock.recvfrom(1)
         #print(adk)
         try:
-            sock.settimeout(1)
+            sock.settimeout(0.600)
             adk, server = sock.recvfrom(bufferSize)
             #print(adk)
         except socket.timeout:
-            sock.settimeout(1)
+            sock.settimeout(0.600)
             sent = sock.sendto(data, server_address)
             adk, server = sock.recvfrom(bufferSize)
             
@@ -91,18 +91,18 @@ for x in range(numTimesSend):
         #break            
             
     try:
-        sock.settimeout(1)
+        sock.settimeout(0.600)
         sent = sock.sendto(eof, server_address)
     except socket.timeout:
-        sock.settimeout(1)
+        sock.settimeout(0.600)
         sent = sock.sendto(eof, server_address)
         print("did not send eof")
 
     try:
-        sock.settimeout(1)
+        sock.settimeout(0.600)
         data, server = sock.recvfrom(bufferSize)
     except socket.timeout:
-        sock.settimeout(1)
+        sock.settimeout(0.600)
         sent = sock.sendto(eof, server_address)
         data, server = sock.recvfrom(bufferSize)    
     #print(data)
