@@ -47,15 +47,24 @@ while True:
         f.write(data)
         #s.settimeout(15)
         try:
-            s.settimeout(15)
+            s.settimeout(0.600)
             sent = s.sendto(adk, server)
             print("sent adk for the ",i,"th time")
-        except s.settimeout:
+        except socket.timeout:
             print("did not send adk")
-            s.settimeout(15)
+            s.settimeout(1)
             sent = s.sendto(adk, server)
             #check = False  
-        data, server = s.recvfrom(bufferSize)
+
+        try:
+            s.settimeout(0.600)
+            data, server = s.recvfrom(bufferSize)
+        except socket.timeout:
+            s.settimeout(0.600)
+            sent = s.sendto(adk, server)
+            data, server = s.recvfrom(bufferSize)
+            #check = False      
+        #data, server = s.recvfrom(bufferSize)
         #print(data)
         if data.decode('utf8') == '-1':
             sent = s.sendto(adk, server)
@@ -74,9 +83,11 @@ while True:
     if i == totalFilesCount:   
         break;
     try:
+        s.settimeout(0.600)
         sent = s.sendto(adk, server)
-    except:
-        print("did not send adk") 
+    except socket.timeout:
+        s.settimeout(1)
+        #print("did not send adk") 
     #s.close()
 elapsed = str(time.time() - s_time)
 print('The average time to receive file ',fileName,' in millisecond is: ',totalTime/totalFilesCount)
