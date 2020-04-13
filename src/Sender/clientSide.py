@@ -6,7 +6,7 @@ import filecmp
 import os
 import hashlib
 #initializing host, port, filename, total time and number of times to send the file
-serverAddress = "IP_TO_BE_ADDED"
+serverAddress = "192.168.1.34"
 serverPort = 10031
 #sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 #server_address = (serverAddress, serverPort)
@@ -30,7 +30,7 @@ for x in range(numTimesSend):
     #connecting to the server
     #sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     #server_address = (serverAddress, serverPort)
-    x+=1
+    #x+=1
     #s.send('name.txt'.ljust(100).encode('utf-8'))
     print('I am sending file', fileName,' for the ',x,'th  time')
     #opening file to read
@@ -48,9 +48,9 @@ for x in range(numTimesSend):
             sTime = datetime.now()
             s_time = time.time()
             timeToStart = 1
-    for j in range (int(packetsToSend)):
+    for j in range (int(packetsToSend) + 1):
         sent = sock.sendto(data, server_address)
-        j+=1
+        ##j+=1
 
         #print("sending")
 
