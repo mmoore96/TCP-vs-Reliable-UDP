@@ -6,7 +6,7 @@ import filecmp
 import os
 import hashlib
 #initializing host, port, filename, total time and number of times to send the file
-serverAddress = "192.168.1.34"
+serverAddress = "24.214.242.190"
 serverPort = 10031
 #sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 #server_address = (serverAddress, serverPort)
@@ -36,7 +36,7 @@ for x in range(numTimesSend):
     #opening file to read
     file_to_send = open(fileName, 'rb')    
     #reading the first 1024 bits
-    data = file_to_send.read(1024)
+    data = file_to_send.read(bufferSize)
     #sock.sendto(data, server_address)
     test = True
     packetsToSend = statinfo.st_size / bufferSize
@@ -82,10 +82,11 @@ for x in range(numTimesSend):
         #test = False
         #break            
             
-    #try:
-    sock.settimeout(10)
-    sent = sock.sendto(eof, server_address)
-    #print(eof)
+    try:
+        sock.settimeout(15)
+        sent = sock.sendto(eof, server_address)
+    except:
+        print("did not send adk")
     data, server = sock.recvfrom(bufferSize)
     #print(data)
     if data.decode('utf8') == 'ok':
