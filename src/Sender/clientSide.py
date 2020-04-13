@@ -49,7 +49,12 @@ for x in range(numTimesSend):
             s_time = time.time()
             timeToStart = 1
     for j in range (int(packetsToSend) + 1):
-        sent = sock.sendto(data, server_address)
+
+        try:
+            sock.settimeout(15)
+            sent = sock.sendto(data, server_address)
+        except socket.timeout:
+            sent = sock.sendto(data, server_address)
         ##j+=1
 
         #print("sending")
@@ -59,10 +64,13 @@ for x in range(numTimesSend):
         #adk, server = sock.recvfrom(1)
         #print(adk)
         try:
-            sock.settimeout(30)
+            sock.settimeout(15)
             adk, server = sock.recvfrom(bufferSize)
             #print(adk)
-        except:
+        except socket.timeout:
+            sock.settimeout(2)
+            sent = sock.sendto(data, server_address)
+            adk, server = sock.recvfrom(bufferSize)
             print("did not get adk")
             break    
         if adk.decode('utf8') == 'ok':
