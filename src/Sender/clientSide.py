@@ -12,7 +12,7 @@ serverPort = 10030
 #server_address = (serverAddress, serverPort)
 fileName = "send.txt"
 totalTime = 0
-numTimesSend = 100
+numTimesSend = 101
 seqNum = 3000
 bytesData = seqNum.to_bytes(4,"little")
 print('I am connecting to server side: ', serverAddress,'\n')
@@ -85,7 +85,7 @@ for x in range(numTimesSend):
             data = bytesData + fileData
 
         else:
-            sent = sock.sendto(data, server_address)
+            print("adk is: ",adk," seqNum is: ",seqNum," they did not match")
         if data == b'':
             test = False
             #print("empty test")
