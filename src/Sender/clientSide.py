@@ -14,6 +14,7 @@ fileName = "send.txt"
 totalTime = 0
 numTimesSend = 100
 seqNum = 3000
+bytesData = seqNum.to_bytes(4,"little")
 print('I am connecting to server side: ', serverAddress,'\n')
 eof = "-1".encode('utf8')
 #using a for loop to send the file 100 times 
@@ -24,7 +25,7 @@ for x in range(numTimesSend):
     server_address = (serverAddress, serverPort)
     fileName = "send.txt"
     statinfo = os.stat(fileName)
-    
+    #seqNum+=1
     #recording the start time
     
     #print("Request started at: " + str(datetime.datetime.utcnow()))
@@ -37,7 +38,9 @@ for x in range(numTimesSend):
     #opening file to read
     file_to_send = open(fileName, 'rb')    
     #reading the first 1024 bits
-    data = file_to_send.read(bufferSize - 4)
+    fileData = file_to_send.read(bufferSize - 4)
+    data = bytesData + fileData
+    #print(data)
     #sock.sendto(data, server_address)
     test = True
     packetsToSend = statinfo.st_size / bufferSize
@@ -73,9 +76,10 @@ for x in range(numTimesSend):
             sent = sock.sendto(data, server_address)
             adk, server = sock.recvfrom(bufferSize)
             
-                
-        if adk.decode('utf8') == 'ok':
+        adk = int.from_bytes(adk,"little")        
+        if adk == seqNum + 1:
             #print(adk)
+            seqNum+=1
             data = file_to_send.read(bufferSize)
         else:
             print("did not get adk")
@@ -107,7 +111,8 @@ for x in range(numTimesSend):
         sent = sock.sendto(eof, server_address)
         data, server = sock.recvfrom(bufferSize)    
     #print(data)
-    if data.decode('utf8') == 'ok':
+    adk = int.from_bytes(data,"little")          
+    if adk == seqNum + 1:
         print("got adk from server for the ",x,"time")
     
         print('I am finishing sending file', fileName,' for the ',x,'th  time')
