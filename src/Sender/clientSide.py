@@ -88,8 +88,14 @@ for x in range(numTimesSend):
     except sock.settimeout:
         sock.settimeout(15)
         sent = sock.sendto(eof, server_address)
-        print("did not send adk")
-    data, server = sock.recvfrom(bufferSize)
+        print("did not send eof")
+
+    try:
+        sock.settimeout(15)
+        data, server = sock.recvfrom(bufferSize)
+    except sock.settimeout:
+        sock.settimeout(15)
+        data, server = sock.recvfrom(bufferSize)
     #print(data)
     if data.decode('utf8') == 'ok':
     
