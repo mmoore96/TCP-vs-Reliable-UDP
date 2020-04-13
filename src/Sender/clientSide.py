@@ -12,7 +12,7 @@ serverPort = 10031
 #server_address = (serverAddress, serverPort)
 fileName = "send.txt"
 totalTime = 0
-numTimesSend = 10
+numTimesSend = 100
 print('I am connecting to server side: ', serverAddress,'\n')
 eof = "-1".encode('utf8')
 #using a for loop to send the file 100 times 
