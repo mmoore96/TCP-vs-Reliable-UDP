@@ -80,7 +80,10 @@ for x in range(numTimesSend):
         if adk == seqNum + 1:
             #print(adk)
             seqNum+=1
-            data = file_to_send.read(bufferSize)
+            fileData = file_to_send.read(bufferSize - 4)
+            bytesData = seqNum.to_bytes(4,"little")
+            data = bytesData + fileData
+
         else:
             print("did not get adk")
         if data == b'':
