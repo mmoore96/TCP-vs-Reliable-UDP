@@ -85,7 +85,7 @@ for x in range(numTimesSend):
             data = bytesData + fileData
 
         else:
-            print("did not get adk")
+            sent = sock.sendto(data, server_address)
         if data == b'':
             test = False
             #print("empty test")
