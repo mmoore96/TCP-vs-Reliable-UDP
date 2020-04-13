@@ -13,6 +13,7 @@ serverPort = 10030
 fileName = "send.txt"
 totalTime = 0
 numTimesSend = 100
+seqNum = 3000
 print('I am connecting to server side: ', serverAddress,'\n')
 eof = "-1".encode('utf8')
 #using a for loop to send the file 100 times 
@@ -36,7 +37,7 @@ for x in range(numTimesSend):
     #opening file to read
     file_to_send = open(fileName, 'rb')    
     #reading the first 1024 bits
-    data = file_to_send.read(bufferSize)
+    data = file_to_send.read(bufferSize - 4)
     #sock.sendto(data, server_address)
     test = True
     packetsToSend = statinfo.st_size / bufferSize
