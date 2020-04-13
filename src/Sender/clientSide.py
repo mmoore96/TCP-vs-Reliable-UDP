@@ -107,6 +107,7 @@ for x in range(numTimesSend):
         data, server = sock.recvfrom(bufferSize)    
     #print(data)
     if data.decode('utf8') == 'ok':
+        print("got adk from server for the ",x,"time")
     
         print('I am finishing sending file', fileName,' for the ',x,'th  time')
         file_to_send.close()
