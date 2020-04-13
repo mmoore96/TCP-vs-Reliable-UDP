@@ -6,8 +6,8 @@ import sys
 from socket import AF_INET, SOCK_DGRAM
 import hashlib
 #initializing host, port
-serverAddress = "localhost"
-serverPort = 10032
+serverAddress = '192.168.1.34'
+serverPort = 10030 #33822
 #starting the server
 s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 s.settimeout(15);
@@ -15,7 +15,7 @@ server_address = (serverAddress, serverPort)
 s.bind(server_address)
 totalTime = 0
 print('I am ready for any client side request \n')
-totalFilesCount = 5
+totalFilesCount = 100
 i=0;
 fileName = 'receive.txt';
 adk = 'ok'.encode('utf8')
@@ -49,8 +49,11 @@ while True:
         try:
             s.settimeout(15)
             sent = s.sendto(adk, server)
-        except:
+            print("sent adk for the ",i,"th time")
+        except s.settimeout:
             print("did not send adk")
+            s.settimeout(15)
+            sent = s.sendto(adk, server)
             #check = False  
         data, server = s.recvfrom(bufferSize)
         #print(data)
