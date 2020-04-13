@@ -51,7 +51,7 @@ for x in range(numTimesSend):
     for j in range (int(packetsToSend) + 1):
 
         try:
-            sock.settimeout(15)
+            sock.settimeout(1)
             sent = sock.sendto(data, server_address)
         except socket.timeout:
             sent = sock.sendto(data, server_address)
@@ -64,11 +64,11 @@ for x in range(numTimesSend):
         #adk, server = sock.recvfrom(1)
         #print(adk)
         try:
-            sock.settimeout(15)
+            sock.settimeout(1)
             adk, server = sock.recvfrom(bufferSize)
             #print(adk)
         except socket.timeout:
-            sock.settimeout(2)
+            sock.settimeout(1)
             sent = sock.sendto(data, server_address)
             adk, server = sock.recvfrom(bufferSize)
             
@@ -91,18 +91,18 @@ for x in range(numTimesSend):
         #break            
             
     try:
-        sock.settimeout(2)
+        sock.settimeout(1)
         sent = sock.sendto(eof, server_address)
     except socket.timeout:
-        sock.settimeout(2)
+        sock.settimeout(1)
         sent = sock.sendto(eof, server_address)
         print("did not send eof")
 
     try:
-        sock.settimeout(2)
+        sock.settimeout(1)
         data, server = sock.recvfrom(bufferSize)
     except socket.timeout:
-        sock.settimeout(2)
+        sock.settimeout(1)
         sent = sock.sendto(eof, server_address)
         data, server = sock.recvfrom(bufferSize)    
     #print(data)
@@ -115,7 +115,7 @@ for x in range(numTimesSend):
         endTime = datetime.now()
         timeTaken = int((endTime - startTime).total_seconds() * 1000)
         totalTime += timeTaken
-        print('The time used in millisecond to receive ', fileName ,' for ', x,'th time is: ',timeTaken,"\n")
+        print('The time used in millisecond to send ', fileName ,' for ', x,'th time is: ',timeTaken,"\n")
         #except:
         sock.close()
 #sock.close()
