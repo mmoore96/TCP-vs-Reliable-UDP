@@ -30,7 +30,7 @@ for x in range(numTimesSend):
     #connecting to the server
     #sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     #server_address = (serverAddress, serverPort)
-    #x+=1
+    x+=1
     #s.send('name.txt'.ljust(100).encode('utf-8'))
     print('I am sending file', fileName,' for the ',x,'th  time')
     #opening file to read
