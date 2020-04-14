@@ -6,7 +6,7 @@ import sys
 from socket import AF_INET, SOCK_DGRAM
 import hashlib
 #initializing host, port
-serverAddress = '192.168.1.104' #'192.168.1.34'
+serverAddress = '192.168.1.34' #'192.168.1.34'
 serverPort = 10002 #33822
 #starting the server
 s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -48,7 +48,7 @@ while True:
     while data:
         fileSeqNum = data[:5]
         seqNum = int.from_bytes(fileSeqNum,"little")
-        print (seqNum)
+        #print (seqNum)
         if startSeqNum == seqNum:
             seqNum+=1
             startSeqNum+=1
@@ -62,9 +62,9 @@ while True:
         try:
             s.settimeout(0.600)
             sent = s.sendto(adk, server)
-            print("sent adk for the ",i,"th time")
+            #print("sent adk for the ",i,"th time")
         except socket.timeout:
-            print("did not send adk")
+            #print("did not send adk")
             s.settimeout(1)
             sent = s.sendto(adk, server)
             #check = False  
@@ -85,7 +85,7 @@ while True:
             #     break
                     
         except socket.timeout:
-            s.settimeout(0.800)
+            #s.settimeout(0.800)
             sent = s.sendto(adk, server)
             data, server = s.recvfrom(bufferSize)
             #check = False      
@@ -107,7 +107,8 @@ while True:
                 f.close
                 break
         except UnicodeDecodeError:
-            print("decode error")    
+            error = "decode error"
+                
         
         #f.close()
     #f.close()
