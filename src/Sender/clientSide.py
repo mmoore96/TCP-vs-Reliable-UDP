@@ -12,7 +12,7 @@ serverPort = 10002
 #server_address = (serverAddress, serverPort)
 fileName = "send.txt"
 totalTime = 0
-numTimesSend = 10
+numTimesSend = 100
 seqNum = 30000
 bytesData = seqNum.to_bytes(5,"little")
 print('I am connecting to server side: ', serverAddress,'\n')
@@ -45,7 +45,7 @@ for x in range(numTimesSend):
     test = True
     packetsToSend = statinfo.st_size / bufferSize
     #print(file_to_send.tell())
-    print(packetsToSend)
+    #print(packetsToSend)
     startTime = datetime.now()
     start_time = time.time()
     while timeToStart == 0:
@@ -72,13 +72,13 @@ for x in range(numTimesSend):
             adk, server = sock.recvfrom(bufferSize)
             #print(adk)
         except socket.timeout:
-            sock.settimeout(0.800)
+            #sock.settimeout(0.800)
             sent = sock.sendto(data, server_address)
             adk, server = sock.recvfrom(bufferSize)
 
         adk = int.from_bytes(adk,"little")
-        print(adk)
-        print(seqNum+1)
+        #print(adk)
+        #print(seqNum+1)
         if adk == seqNum + 1:
             #print(adk)
             seqNum+=1
