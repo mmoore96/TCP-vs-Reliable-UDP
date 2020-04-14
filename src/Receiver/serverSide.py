@@ -18,7 +18,7 @@ print('I am ready for any client side request \n')
 totalFilesCount = 100
 i=0;
 fileName = 'receive.txt';
-adk = 'ok'.encode('utf8')
+#adk = 'ok'.encode('utf8')
 timeToStart = 0
 bufferSize = 8192
 while True:
@@ -44,6 +44,12 @@ while True:
     #print(data)
     check = True
     while data:
+        fileSeqNum = data[:4]
+        seqNum = int.from_bytes(fileSeqNum,"little")
+        print (seqNum)
+        seqNum+=1
+        adk = seqNum.to_bytes(4,"little")
+        data = data[4:]
         f.write(data)
         #s.settimeout(15)
         try:
@@ -66,7 +72,14 @@ while True:
             #check = False      
         #data, server = s.recvfrom(bufferSize)
         #print(data)
-        if data.decode('utf8') == '-1':
+        
+        #eofData = data[4:]
+        #print(data)
+        if data.decode('utf8').strip() == '-1':
+            fileSeqNum = data[:4]
+            seqNum = int.from_bytes(fileSeqNum,"little")
+            seqNum+=1
+            adk = seqNum.to_bytes(4,"little")
             sent = s.sendto(adk, server)
             f.close
             break
@@ -96,7 +109,7 @@ print("\nElapsed: " + elapsed)
 f=0
 #checking whether the correct data is recieved or not
 hashFun, server = s.recvfrom(bufferSize)
-
+print(hashFun)
 s.close()
 for x in range(totalFilesCount):
     BLOCKSIZE = 65536
