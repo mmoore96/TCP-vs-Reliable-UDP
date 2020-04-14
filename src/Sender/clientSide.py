@@ -68,11 +68,11 @@ for x in range(numTimesSend):
         #adk, server = sock.recvfrom(1)
         #print(adk)
         try:
-            sock.settimeout(0.600)
+            sock.settimeout(0.800)
             adk, server = sock.recvfrom(bufferSize)
             #print(adk)
         except socket.timeout:
-            sock.settimeout(0.600)
+            sock.settimeout(0.800)
             sent = sock.sendto(data, server_address)
             adk, server = sock.recvfrom(bufferSize)
             
