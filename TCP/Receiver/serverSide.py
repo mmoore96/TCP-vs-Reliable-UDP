@@ -12,7 +12,7 @@ s.bind((HOST, PORT))
 s.listen(5)
 totalTime = 0
 print('I am ready for any client side request \n')
-totalFilesCount = 3
+totalFilesCount = 10
 bufferSize = 8192
 i=0;
 timeToStart = 0
