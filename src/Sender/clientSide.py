@@ -6,7 +6,7 @@ import filecmp
 import os
 import hashlib
 #initializing host, port, filename, total time and number of times to send the file
-serverAddress = "24.214.242.190"
+serverAddress = "192.168.1.34"
 serverPort = 10030
 #sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 #server_address = (serverAddress, serverPort)
@@ -115,9 +115,9 @@ for x in range(numTimesSend):
         sent = sock.sendto(eof, server_address)
         adk, server = sock.recvfrom(bufferSize)    
     #print(data)
-
+    adk = adk[:4]
     adk = int.from_bytes(adk,"little")   
-    #print(adk)       
+    print(adk)       
     if adk == seqNum + 1:
         print("got adk from server for the ",x,"time")
     
