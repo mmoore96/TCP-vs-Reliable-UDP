@@ -12,7 +12,7 @@ serverPort = 10002
 #server_address = (serverAddress, serverPort)
 fileName = "send.txt"
 totalTime = 0
-numTimesSend = 2
+numTimesSend = 10
 seqNum = 30000
 bytesData = seqNum.to_bytes(5,"little")
 print('I am connecting to server side: ', serverAddress,'\n')
