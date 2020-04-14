@@ -1,58 +1,76 @@
 import socket
-from datetime import datetime, time
-import time
+import filecmp
+from datetime import datetime
 import hashlib
-#initializing host, port, filename, total time and number of times to send the file
-host = '24.214.242.190'
-port = 10004
-fileName = "send.txt"
+import time
+#initializing host, port
+HOST = '192.168.1.34'
+PORT = 10004
+#starting the server
+s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+s.bind((HOST, PORT))
+s.listen(5)
 totalTime = 0
-numTimesSend = 100
+print('I am ready for any client side request \n')
+totalFilesCount = 3
 bufferSize = 8192
-print('I am connecting to server side: ', host,'\n')
-#using a for loop to send the file 100 times 
-for x in range(numTimesSend):
+i=0;
+timeToStart = 0
+fileName = 'rec.txt';
+while True:
+    conn, addr = s.accept()
     #recording the start time
-    #print("Request started at: " + str(datetime.datetime.utcnow()))
-    #connecting to the server
-    s = socket.socket()
-    ##some -1 ?? check is created or not
-    s.connect((host, port))
-        
-    #s.send('name.txt'.ljust(100).encode('utf-8'))
-    print('I am sending file', fileName,' for the ',x,'th  time')
-    #opening file to read
-    file_to_send = open(fileName, 'rb')    
-    #reading the first 1024 bits
     startTime = datetime.now()
-    start_time = time.time()
-    data = file_to_send.read(bufferSize)
+    i = i+1
     
-    while data:
-        s.send(data)
-        #reading the next 1024 bits
-        data = file_to_send.read(bufferSize)
-    print('I am finishing sending file', fileName,' for the ',x,'th  time')
-    file_to_send.close()
+    file = 'receive'+str(i)+'.txt';
+    
+    print('I am starting receiving file ', fileName, 'for the ',i,'th time')
+    #opening the file to write
+    f = open(file, 'wb')
+    while timeToStart == 0:
+            sTime = datetime.now()
+            s_time = time.time()
+            timeToStart = 1
+    data = conn.recv(bufferSize)
+    while (data):
+        f.write(data)
+        data = conn.recv(bufferSize)
+    
+    f.close()
+
+    print('I am finishing receiving file ', fileName, 'for the ',i,'th time ')
     #recording the end time
     endTime = datetime.now()
     timeTaken = int((endTime - startTime).total_seconds() * 1000)
     totalTime += timeTaken
-    print('The time used in millisecond to receive ', fileName ,' for ', x,'th time is: ',timeTaken,"\n")
-    s.close()
+    print('The time used in millisecond to receive ', fileName ,' for ', i,'th time is: ',timeTaken,'\n')
+    if i == totalFilesCount: break;
+    conn.close()
+#s.close()
+elapsed = str(time.time() - s_time)
+print('The average time to receive file ',fileName,' in millisecond is: ',totalTime/totalFilesCount)
+print('Total time to receive file ',fileName,' for ',totalFilesCount,' times in millisecond is: ',totalTime)
+print("\nElapsed: " + elapsed)
+f=0
+conn, addr = s.accept()
+hashFun = conn.recv(bufferSize)
 
-print('The average time to receive file ',fileName,' in millisecond is: ',totalTime/numTimesSend)
-print('Total time to receive file ',fileName,' for ',numTimesSend,' times in millisecond is: ',totalTime)
-print("\nElapsed: " + str(time.time() - start_time))
+for x in range(totalFilesCount):
+    BLOCKSIZE = 65536
+    hasher = hashlib.sha1()
+    x += 1
+    with open('receive'+str(x)+'.txt', 'rb') as afile:
+        buf = afile.read(BLOCKSIZE)
+        while len(buf) > 0:
+            hasher.update(buf)
+            buf = afile.read(BLOCKSIZE)
+    #print(hasher.hexdigest())
+    #res = filecmp.cmp('receive.txt','receive'+str(x)+'.txt',shallow=False)
+    if hashFun.decode('utf8') != hasher.hexdigest():
+        f += 1
+    #if res == False: f += 1
+print(f , ' Times out of ' , totalFilesCount , ' are not correct!')
 print('I am done')
-s = socket.socket()
-s.connect((host, port))
-BLOCKSIZE = 65536
-hasher = hashlib.sha1()
-with open(fileName, 'rb') as afile:
-    buf = afile.read(BLOCKSIZE)
-    while len(buf) > 0:
-        hasher.update(buf)
-        buf = afile.read(BLOCKSIZE)      
-s.send(hasher.hexdigest().encode('utf8'))
-s.close()        
+conn.close()    
+s.close()
