@@ -15,13 +15,13 @@ server_address = (serverAddress, serverPort)
 s.bind(server_address)
 totalTime = 0
 print('I am ready for any client side request \n')
-totalFilesCount = 2
+totalFilesCount = 10
 i=0;
 fileName = 'receive.txt';
 #adk = 'ok'.encode('utf8')
 timeToStart = 0
 bufferSize = 8192
-
+startSeqNum = 30000
 
 while True:
     #s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -49,10 +49,15 @@ while True:
         fileSeqNum = data[:5]
         seqNum = int.from_bytes(fileSeqNum,"little")
         print (seqNum)
-        seqNum+=1
-        adk = seqNum.to_bytes(5,"little")
-        data = data[5:]
-        f.write(data)
+        if startSeqNum == seqNum:
+            seqNum+=1
+            startSeqNum+=1
+            adk = seqNum.to_bytes(5,"little")
+            data = data[5:]
+            f.write(data)
+        else:
+            adk = startSeqNum.to_bytes(5,"little")
+            #sent = s.sendto(adk, server)    
         #s.settimeout(15)
         try:
             s.settimeout(0.600)
@@ -67,6 +72,18 @@ while True:
         try:
             s.settimeout(0.800)
             data, server = s.recvfrom(bufferSize)
+            # fileSeqNum = data[:5]
+            # newSeqNum = int.from_bytes(fileSeqNum,"little")
+            # if newSeqNum != seqNum:
+            #     sent = s.sendto(adk, server)
+            #     data, server = s.recvfrom(bufferSize)
+            #     seqNum+=1
+            #     adk = seqNum.to_bytes(5,"little")
+            #     sent = s.sendto(adk, server)
+            #     f.write(data)
+            # else:
+            #     break
+                    
         except socket.timeout:
             s.settimeout(0.800)
             sent = s.sendto(adk, server)
