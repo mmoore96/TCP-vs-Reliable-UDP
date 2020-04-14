@@ -6,8 +6,8 @@ import sys
 from socket import AF_INET, SOCK_DGRAM
 import hashlib
 #initializing host, port
-serverAddress = '192.168.1.34'
-serverPort = 10030 #33822
+serverAddress = '192.168.1.104' #'192.168.1.34'
+serverPort = 10002 #33822
 #starting the server
 s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 s.settimeout(15);
@@ -15,12 +15,14 @@ server_address = (serverAddress, serverPort)
 s.bind(server_address)
 totalTime = 0
 print('I am ready for any client side request \n')
-totalFilesCount = 100
+totalFilesCount = 2
 i=0;
 fileName = 'receive.txt';
 #adk = 'ok'.encode('utf8')
 timeToStart = 0
 bufferSize = 8192
+
+
 while True:
     #s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     #recording the start time
@@ -44,12 +46,12 @@ while True:
     #print(data)
     check = True
     while data:
-        fileSeqNum = data[:4]
+        fileSeqNum = data[:5]
         seqNum = int.from_bytes(fileSeqNum,"little")
         print (seqNum)
         seqNum+=1
-        adk = seqNum.to_bytes(4,"little")
-        data = data[4:]
+        adk = seqNum.to_bytes(5,"little")
+        data = data[5:]
         f.write(data)
         #s.settimeout(15)
         try:
@@ -63,26 +65,32 @@ while True:
             #check = False  
 
         try:
-            s.settimeout(0.600)
+            s.settimeout(0.800)
             data, server = s.recvfrom(bufferSize)
         except socket.timeout:
-            s.settimeout(0.600)
+            s.settimeout(0.800)
             sent = s.sendto(adk, server)
             data, server = s.recvfrom(bufferSize)
             #check = False      
         #data, server = s.recvfrom(bufferSize)
         #print(data)
         
-        #eofData = data[4:]
+        eofData = data[5:]
         #print(data)
-        if data.decode('utf8').strip() == '-1':
-            fileSeqNum = data[:4]
-            seqNum = int.from_bytes(fileSeqNum,"little")
-            seqNum+=1
-            adk = seqNum.to_bytes(4,"little")
-            sent = s.sendto(adk, server)
-            f.close
-            break
+        try:
+            if data.decode('utf8') == '-1':
+                fileSeqNum = data[:5]
+                seqNum = int.from_bytes(fileSeqNum,"little")
+                seqNum+=1
+                adk = seqNum.to_bytes(5,"little")
+
+                okAdk = 'ok'.encode('utf8')
+                toSend = adk + okAdk
+                sent = s.sendto(toSend, server)
+                f.close
+                break
+        except UnicodeDecodeError:
+            print("decode error")    
         
         #f.close()
     #f.close()
@@ -96,20 +104,24 @@ while True:
     if i == totalFilesCount:   
         break;
     try:
+        seqNum+=1
+        adk = seqNum.to_bytes(5,"little")
         s.settimeout(0.600)
         sent = s.sendto(adk, server)
     except socket.timeout:
         s.settimeout(1)
+        sent = s.sendto(adk, server)
         #print("did not send adk") 
     #s.close()
 elapsed = str(time.time() - s_time)
 print('The average time to receive file ',fileName,' in millisecond is: ',totalTime/totalFilesCount)
 print('Total time to receive file ',fileName,' for ',totalFilesCount,' times in millisecond is: ',totalTime)
 print("\nElapsed: " + elapsed)
+
 f=0
 #checking whether the correct data is recieved or not
 hashFun, server = s.recvfrom(bufferSize)
-print(hashFun)
+#print(hashFun)
 s.close()
 for x in range(totalFilesCount):
     BLOCKSIZE = 65536
@@ -121,9 +133,10 @@ for x in range(totalFilesCount):
             hasher.update(buf)
             buf = afile.read(BLOCKSIZE)
     #print(hasher.hexdigest())
-    #res = filecmp.cmp('receive.txt','receive'+str(x)+'.txt',shallow=False)
-    if hashFun.decode('utf8') != hasher.hexdigest():
-        f += 1
-    #if res == False: f += 1
+        #res = filecmp.cmp('receive.txt','receive'+str(x)+'.txt',shallow=False)
+        if hashFun.decode('utf8') != hasher.hexdigest():
+            f += 1
+        #if res == False: f += 1
 print(f , ' Times out of ' , totalFilesCount , ' are not correct!')
 print('I am done')
+   
