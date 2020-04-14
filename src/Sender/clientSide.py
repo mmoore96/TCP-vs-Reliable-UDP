@@ -6,13 +6,13 @@ import filecmp
 import os
 import hashlib
 #initializing host, port, filename, total time and number of times to send the file
-serverAddress = "24.214.242.190"
+serverAddress = "192.168.1.34"
 serverPort = 10030
 #sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 #server_address = (serverAddress, serverPort)
 fileName = "send.txt"
 totalTime = 0
-numTimesSend = 101
+numTimesSend = 100
 seqNum = 3000
 bytesData = seqNum.to_bytes(4,"little")
 print('I am connecting to server side: ', serverAddress,'\n')
@@ -34,7 +34,7 @@ for x in range(numTimesSend):
     #server_address = (serverAddress, serverPort)
     #x+=1
     #s.send('name.txt'.ljust(100).encode('utf-8'))
-    print('I am sending file', fileName,' for the ',x,'th  time')
+    print('I am sending file', fileName,' for the ',x + 1,'th  time')
     #opening file to read
     file_to_send = open(fileName, 'rb')    
     #reading the first 1024 bits
@@ -76,7 +76,8 @@ for x in range(numTimesSend):
             sent = sock.sendto(data, server_address)
             adk, server = sock.recvfrom(bufferSize)
             
-        adk = int.from_bytes(adk,"little")        
+        adk = int.from_bytes(adk,"little")    
+        #print(adk)    
         if adk == seqNum + 1:
             #print(adk)
             seqNum+=1
@@ -86,7 +87,7 @@ for x in range(numTimesSend):
 
         else:
             print("adk is: ",adk," seqNum is: ",seqNum," they did not match")
-        if data == b'':
+        if data[4:] == b'':
             test = False
             #print("empty test")
             break
@@ -108,13 +109,15 @@ for x in range(numTimesSend):
 
     try:
         sock.settimeout(0.600)
-        data, server = sock.recvfrom(bufferSize)
+        adk, server = sock.recvfrom(bufferSize)
     except socket.timeout:
         sock.settimeout(0.600)
         sent = sock.sendto(eof, server_address)
-        data, server = sock.recvfrom(bufferSize)    
+        adk, server = sock.recvfrom(bufferSize)    
     #print(data)
-    adk = int.from_bytes(data,"little")          
+
+    adk = int.from_bytes(adk,"little")   
+    #print(adk)       
     if adk == seqNum + 1:
         print("got adk from server for the ",x,"time")
     
