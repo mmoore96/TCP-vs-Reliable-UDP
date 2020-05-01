@@ -4,15 +4,17 @@ from datetime import datetime
 import hashlib
 import time
 #initializing host, port
-HOST = '192.168.1.34'
-PORT = 10004
+HOST = '000.000.0.00' #PUT the Server IP HERE!
+PORT = 10002 #Change port number to match your router settings
 #starting the server
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.bind((HOST, PORT))
 s.listen(5)
 totalTime = 0
 print('I am ready for any client side request \n')
-totalFilesCount = 100
+
+#change depending on how many files you will be receiving
+totalFilesCount = 20
 bufferSize = 8192
 i=0;
 timeToStart = 0
@@ -47,7 +49,6 @@ while True:
     print('The time used in millisecond to receive ', fileName ,' for ', i,'th time is: ',timeTaken,'\n')
     if i == totalFilesCount: break;
     conn.close()
-#s.close()
 elapsed = str(time.time() - s_time)
 print('The average time to receive file ',fileName,' in millisecond is: ',totalTime/totalFilesCount)
 print('Total time to receive file ',fileName,' for ',totalFilesCount,' times in millisecond is: ',totalTime)
@@ -65,11 +66,8 @@ for x in range(totalFilesCount):
         while len(buf) > 0:
             hasher.update(buf)
             buf = afile.read(BLOCKSIZE)
-    #print(hasher.hexdigest())
-    #res = filecmp.cmp('receive.txt','receive'+str(x)+'.txt',shallow=False)
     if hashFun.decode('utf8') != hasher.hexdigest():
         f += 1
-    #if res == False: f += 1
 print(f , ' Times out of ' , totalFilesCount , ' are not correct!')
 print('I am done')
 conn.close()    
