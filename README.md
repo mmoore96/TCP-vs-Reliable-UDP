@@ -1,6 +1,6 @@
 # TCP vs Reliable UDP
 
-This is two python programs to test the efficiency of file transfer using TCP vs reliable UDP.
+Two python programs to test the efficiency of file transfer using TCP vs reliable UDP.
 
 ## Installation
 
