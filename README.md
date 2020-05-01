@@ -52,6 +52,7 @@ python3 gen.py
 fileName = "send.txt"
 ```
 3. Once these changes have been made, ensure you save the python file.
+
 4. Run Receiver/serverSide.py FIRST.
 
 ```bash
