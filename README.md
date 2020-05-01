@@ -64,7 +64,7 @@ python3 serverSide.py
 python3 serverSide.py
 ```
 
-## OUTPUT
+## Output
 
 Server Side:
 ```bash
