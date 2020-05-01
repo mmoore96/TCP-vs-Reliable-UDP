@@ -11,7 +11,7 @@ git clone https://github.com/mmoore96/TCP-vs-Reliable-UDP.git
 ```
 
 ## Setup
-1. Choose Either TCP or rUDP and enter the directory.
+1. Choose either TCP or rUDP and enter the directory.
 2. Open the serverSide and clientSide files in an IDE or text editor of your liking.
 3. Change the following lines of code and enter the IP Address and port number.
 
