@@ -51,15 +51,28 @@ python3 gen.py
 #Can be changed to which ever file you want to send.
 fileName = "send.txt"
 ```
-3. Once these changes have been made, ensure you save the python file.
+3. Change the following in the code based on how many files you want to send(applies to both TCP/UDP).
 
-4. Run Receiver/serverSide.py FIRST.
+Receiver/serverSide.py:
+```python
+#change depending on how many files you will be receiving
+totalFilesCount = 5
+```
+Sender/clientSide.py:
+```python
+#change depending on how many files you will be sending
+numTimesSend = 20
+```
+4. Once these changes have been made, ensure you save the python file.
+
+5. Run Receiver/serverSide.py FIRST.
 
 ```bash
 python3 serverSide.py
 ```
 
-5. Run Sender/clientSide.py SECOND
+6. Run Sender/clientSide.py SECOND
+
 ```bash
 python3 serverSide.py
 ```
